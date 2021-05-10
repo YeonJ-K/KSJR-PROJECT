@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+        function Base64() {
+            document.getElementById("output").val = Buffer.from(document.getElementById("input").val, 'base64').toString();
+        }
+
+    </script>
+</head>
+<body>
+    <textarea style="resize: none;" cols="50" rows="10" name="input" id="input"></textarea>
+    <input type="button" value="convert" width="100" height="80" onClick="Base64()" />
+    <textarea style="resize: none;" cols="50" rows="10" name="output" id="output"></textarea>
+    
+</body>
+</html>
