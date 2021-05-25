@@ -1,0 +1,16 @@
+{
+  "title": "VBScript",
+  "descriptions": "The deobfuscated code is VBScript, VBScript converts to code that can be used for debugging, not complete Deobfuscation, because it needs to be executed",
+  "regexp_type": "OR",
+  "regexp": [ "", "" ], // VBScript 언어의 특징을 뽑아서 정규표현식화
+  "deobfuscation": "",
+  "code_convert": "replace('execute','write')",
+  /*
+    VBScript 경우에는 실행되어야 난독화 해제를 수행할 수 있기 때문에
+    deobfuscation 은 none으로 들어가게 되고
+    none인 경우에 어떻게 하면 해제할 수 있는 상태를 볼 수 있는지 설명에 알리고
+    code_convert에 해제할 수 있는 코드? 를 넣어줌
+   해당 부분 이해가 안되면 말해주세요
+  */
+  "tips": ""
+} 
