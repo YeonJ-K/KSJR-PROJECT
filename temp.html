@@ -1,31 +1,48 @@
 <!DOCTYPE html>
-<html>
 <head>
-    <script type="text/javascript">
-        function openTextFile() {
-            var input = document.createElement("input");
-            
-            input.type = "file";
-            input.accept = "text/plain"; 
-            
-            input.click();
-            input.onchange = function(event) {
-                processFile(event.target.files[0]);
-            };
-        }
-        
-        function processFile(file) {
-            var reader = new FileReader();
-            reader.readAsText(file, "UTF-8");
-            
-            reader.onload = function() {
-                output.innerText = reader.result;
-            };
-        }    
-    </script>
+<title></title>
+<style>
+.label
+{
+  width: 400px;
+  margin: 10px 0 0 0;
+  padding: 10px;
+  background-color: #ccccff;
+  text-align: center;
+  border: 1px solid #ccccff;
+}
+.elements
+{
+  border: 1px solid #ccccff;
+  padding: 10px;
+  border: 1px solid #ccccff;
+  width: 400px;
+}
+button
+{
+   margin: 20px;
+}
+</style>
 </head>
 <body>
-    <button onclick="openTextFile()">Open</button>
-    <a onclick="window.open('popup.html','popup','width=500 height=700');return false"><div id="output">파일내용<br></div></a>
+<form>
+  <div>
+    <div id="section1" class="label">
+      <p>Box1</p>
+    </div>
+    <div id="section1b" class="elements">
+      <br>
+     </div>
+    </div>
+  <div>
+
+  <div id="section2" class="label">
+    <p>Box2</p>
+  </div>
+  <div class="elements">
+    <br>
+  </div>
+</div>
+</form>
+    <script src="temp.js"></script>
 </body>
-</html>
