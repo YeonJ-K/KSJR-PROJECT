@@ -1,0 +1,8 @@
+{
+  "title": "VBScript",
+  "descriptions": "The deobfuscated code is VBScript, VBScript converts to code that can be used for debugging, not complete Deobfuscation, because it needs to be executed",
+  "regexp": "(?=^(E|e)[\\w]{1,12}[\\S][\\w]{1,}[\\W])(?=^(E|e)[\\w]{3,}[\\S]*[\\s]{1,}).*",
+  "deobfuscation": "",
+  "code_convert": "./deobfuscation_code/vbs_replace_convert.py",
+  "tips": ""
+} 

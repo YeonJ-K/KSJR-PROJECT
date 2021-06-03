@@ -1,0 +1,8 @@
+{
+  "title": "Powershell - Split obfuscation",
+  "descriptions": "The deobfuscated code is Powershellscript-split obfuscation",
+  "regexp": "([^\\\"^\\+])",
+  "deobfuscation": "./deobfuscation_code/power_split_deobfuscation.py",
+  "code_convert": "",
+  "tips": ""
+}
