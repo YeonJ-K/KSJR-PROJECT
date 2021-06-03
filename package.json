@@ -1,9 +1,0 @@
-{
-  "name": "ksjr_project",
-  "version": "0.0.0",
-  "description": "KSJR_PROJECT",
-  "main": "server.js",
-  "author": {
-    "name": ""
-  }
-}
