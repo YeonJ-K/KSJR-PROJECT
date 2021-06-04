@@ -1,0 +1,9 @@
+{
+  "title": "BASE64",
+  "descriptions": "Decoding Base64 String. If the released code is incomplete, please try again this Executable",
+  "regexp": "([A-Za-z0-9=]){15,}|([A-Za-z0-9]([\\W])){20,}",
+  "deobfuscation": "./deobfuscation_code/base64_deobfuscation.py",
+  "code_convert": "none",
+  "tips": ""
+}
+
