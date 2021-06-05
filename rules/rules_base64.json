@@ -1,42 +1,9 @@
 {
   "title": "BASE64",
-
-  // 난독화 해제나 탐지 후에 알려주는 문구. 해당 부분에 대해서 설명 필요하면 말해주세요
   "descriptions": "Decoding Base64 String. If the released code is incomplete, please try again this Executable",
-  /* 
-    정규표현식
-    우선 정규표현식을 여러 개 사용하는 경우에 대해서 
-    regexp_type이 AND 인 경우엔 두가지 룰을 사용하는 경우에 대해서 탐지
-    OR 인 경우 룰의 둘 중 하나라도 해당되는 경우에 대해서 탐지. 
-    해당 타입에 대해서 수정해주시면 됩니다.
-  */
-
-  "regexp_type": "AND", // "OR"
-  /*
-    if regexp_type=="AND"
-        (?=list[0])(?=list[1]).*
-     else if regexp_type=="OR"
-        list[0] | list[1]
-  */
-
-
-  // 해당 정규표현식은 제가 임의로 넣은 부분이라 선하님께 드린 이미지대로 잡습니다.
-  // 마지막 싱글 쿼터 부분이 들어가니 해당 부분은 수정해주시면 될 것 같습니다
+  "regexp_type": "AND",
   "regexp": [ "([A-Z])\\w+", "([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?" ],
-
   "deobfuscation": "rules/deobfuscation_code/base64_deobfuscation.py",
-  // 난독화 해제 코드에 대해서 경로를 따로 지정.
-  // rules/deobfuscation_code/base64_deobfuscation.py
-  // 해당 경로의 코드 불러와서 실행하는 형식으로 동작
-
-  /*
-    import sys
-    sys.path.insert(0, "rules/deobfuscation_code/base64_deobfuscation.py")
-    import base64_deobfuscation.py
-  */
-
-
   "tip": "",
-  "sample": "" // Base64난독화 예시로 본 악성코드의 hash 값 넣어주기.
-  // 추후 테스트 할 때 사용하도록 한다.
+  "sample": "" 
 }
