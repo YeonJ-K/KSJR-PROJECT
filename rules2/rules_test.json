@@ -1,8 +1,8 @@
 {
-  "no" : 2,
+  "no" : 1,
   "title": "BASE64",
   "descriptions": "Decoding Base64 String. If the released code is incomplete, please try again this Executable",
-  "regexp": "[A-Za-z0-9=]{15,}",
+  "regexp": "BwAH",
   "deobfuscation": "./deobfuscation_code/base64_deobfuscation.py",
   "code_convert": "none",
   "tips": ""

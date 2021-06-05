@@ -1,4 +1,5 @@
 {
+  "no" : 1,
   "title": "Powershell - Split obfuscation",
   "descriptions": "The deobfuscated code is Powershellscript-split obfuscation",
   "regexp": "([^\\\"^\\+])",

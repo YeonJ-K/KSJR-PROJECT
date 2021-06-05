@@ -25,9 +25,6 @@ html_text2 = """
     </body>
     </html>
     """
-
-
-
 '''
 
 #Rule 읽어오는 파일
@@ -65,9 +62,9 @@ f.close()
 
 
 
-def  load_rules(rule_path:str) -> list:
+def  load_rules(rule_path:str) -> dict:
 
-    rules = []
+    rules = {}
 
     rule_pattern = f'{rule_path}/*.json'
     rule_files = glob.glob(rule_pattern)
@@ -75,7 +72,7 @@ def  load_rules(rule_path:str) -> list:
     for rule_file in rule_files:
         try:
             json_data = json.loads(open(rule_file).read()) 
-            rules.append(json_data)
+            rules[str(json_data['no'])]= json_data
         except Exception as e:
             pass
     return rules
@@ -89,25 +86,41 @@ def load_malware(path:str) -> list:
 
 def match_rule(lines:list, rules:list) -> dict:
 
+    result = {}
 
     for line_idx in range(len(lines)):
-        line_res = {}
+        line_res = []
 
-        for rule in rules:
-            print(f'{line_idx} match {rule["title"]}')
+        for rule in rules.values():
+            #print(f'{line_idx} match {rule["title"]}')
 
             pattern = rule['regexp']
-            print(pattern)
-            try:
-                regexp = re.compile(pattern)
-            except Exception as e:
-                print(f'error {rule["title"]}')
-            #matched_res = re.search(regexp, lines[line_idx])
+            regexp = re.compile(pattern)
+            matched_list = re.findall(regexp, lines[line_idx])
+            
+            line_temp = lines[line_idx]
 
-            #print(matched_res)
+            current_pos = 0
+            for matched in matched_list:
+                
+                while True:
+                    matched_pos = line_temp.find(matched)
 
+                    if matched_pos == -1:
+                        break
+                    line_temp = line_temp[matched_pos+len(matched):]
+                    
+            
+                    line_res.append({'rule_no':rule["no"], 'matched':matched, 'pos': (current_pos+matched_pos, current_pos+matched_pos+len(matched))})
 
+                    current_pos += matched_pos+len(matched)
 
+        #for res in line_res:
+        #    print(f'{res["rule_no"]} in {res["pos"]}')
+        result[str(line_idx+1)] = line_res
+
+    #print(result)
+       
 
 def main():
     parser = argparse.ArgumentParser(description='Parse Script')
@@ -129,8 +142,14 @@ def main():
 
     source_lines = load_malware(args.input)
 
-    match_rule(source_lines, rules)
+    res = match_rule(source_lines, rules)
 
+    f
+
+
+
+    print(rules)
+    print(rules['1']['deobfuscation'] )
 
 
 
