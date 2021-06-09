@@ -139,8 +139,7 @@ def main():
     res = match_rule(source_lines, rules)
 
 #    print(res)
-    
-    # 모든 탐지코드는 deobfuscation에 넣어서 처리
+
     deobfuscation = (res['1'][0]['matched'])
     ob_path = rules['1']['deobfuscation']
     mod_name = os.path.basename(ob_path)
@@ -148,7 +147,9 @@ def main():
     spec = importlib.util.spec_from_file_location(mod_name, ob_path)
     foo = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(foo)
-    cls = foo.deobfus_code(deobfuscation)
-    
+    cls = foo.deobfus_code()
+    func = getattr(cls, "deobfus_code")
+    func(deobfuscation)
+
 if __name__ == '__main__':
     main()
