@@ -4,11 +4,12 @@
 #서버 필요?
 import sys
 import re
+import os
 import json
 import glob
 import argparse
-from rules import *
-
+import inspect
+import importlib.util
 
 html_text1 = """
     <!DOCYTPE html>
@@ -26,7 +27,6 @@ html_text2 = """
     </html>
     """
 '''
-
 #Rule 읽어오는 파일
 rule_files = glob.glob(r'rules/*.json')
 rules = [] # 
@@ -35,8 +35,6 @@ title = []
 descriptions = []
 deobfuscation = []
 code_convert = []
-
-
 #문자열을 전부 읽어와서 for문 돌리기 (전부 읽어오기와 한줄씩 읽어오기가 동시에 불가)
 for i in r.split("\n"):
     #index는 나중에 p태그의 id값으로 사용될 예정, 지금은 예시로 출력만
@@ -51,13 +49,10 @@ for i in r.split("\n"):
         if show:
             print("탐지 : " + show.group())
     index += 1
-
 #html 파일에 추가하기
 with open('html_file.html', 'a') as html_file:
     html_file.write(html_text1 + r + html_text2)
-
 f.close()
-
 '''
 
 
@@ -115,11 +110,10 @@ def match_rule(lines:list, rules:list) -> dict:
 
                     current_pos += matched_pos+len(matched)
 
-        #for res in line_res:
-        #    print(f'{res["rule_no"]} in {res["pos"]}')
+    #    for res in line_res:
+    #        print(f'{res["rule_no"]} in {res["pos"]}')
         result[str(line_idx+1)] = line_res
-
-    #print(result)
+    return result
        
 
 def main():
@@ -144,14 +138,17 @@ def main():
 
     res = match_rule(source_lines, rules)
 
-    f
+#    print(res)
+    
+    # 모든 탐지코드는 deobfuscation에 넣어서 처리
+    deobfuscation = (res['1'][0]['matched'])
+    ob_path = rules['1']['deobfuscation']
+    mod_name = os.path.basename(ob_path)
 
-
-
-    print(rules)
-    print(rules['1']['deobfuscation'] )
-
-
-
+    spec = importlib.util.spec_from_file_location(mod_name, ob_path)
+    foo = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(foo)
+    cls = foo.deobfus_code(deobfuscation)
+    
 if __name__ == '__main__':
     main()
