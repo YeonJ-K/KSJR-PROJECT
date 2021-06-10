@@ -87,7 +87,7 @@ def match_rule(lines:list, rules:list) -> dict:
         line_res = []
 
         for rule in rules.values():
-            #print(f'{line_idx} match {rule["title"]}')
+            print(f'{line_idx+1} match {rule["title"]}')
 
             pattern = rule['regexp']
             regexp = re.compile(pattern)
@@ -138,17 +138,19 @@ def main():
 
     res = match_rule(source_lines, rules)
 
-#    print(res)
-
-    deobfuscation = (res['1'][0]['matched'])
-    ob_path = rules['1']['deobfuscation']
-    mod_name = os.path.basename(ob_path)
-
-    spec = importlib.util.spec_from_file_location(mod_name, ob_path)
-    foo = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(foo)
-    cls = foo.deobfus_code(deobfuscation)
-
-
+    print(res['1'][0])
+    print(rules)
+    for match_idx in res:
+        print(match_idx)
+        deobfuscation = (res[match_idx][0]['matched'])
+        for rule_idx in rules :
+            if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
+                ob_path = rules[rule_idx]['deobfuscation']
+                mod_name = os.path.basename(ob_path)
+        spec = importlib.util.spec_from_file_location(mod_name, ob_path)
+        foo = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(foo)
+        cls = foo.deobfus_code(deobfuscation)
+    
 if __name__ == '__main__':
     main()
