@@ -15,17 +15,18 @@ html_text1 = """
     <!DOCYTPE html>
     <html>
     <head>
-    <title>TEST Page</title>
+        <title>TEST Page</title>
+        <link href="pTag.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
-    <p>
     """
 
 html_text2 = """
-    </p>
     </body>
     </html>
+    
     """
+
 '''
 #Rule 읽어오는 파일
 rule_files = glob.glob(r'rules/*.json')
@@ -50,9 +51,7 @@ for i in r.split("\n"):
             print("탐지 : " + show.group())
     index += 1
 #html 파일에 추가하기
-with open('html_file.html', 'a') as html_file:
-    html_file.write(html_text1 + r + html_text2)
-f.close()
+
 '''
 
 
@@ -115,7 +114,6 @@ def match_rule(lines:list, rules:list) -> dict:
         result[str(line_idx+1)] = line_res
     return result
        
-
 def main():
     parser = argparse.ArgumentParser(description='Parse Script')
     parser.add_argument('input', type=str, 
@@ -140,17 +138,28 @@ def main():
 
     print(res['1'][0])
     print(rules)
+    pCreate = []
     for match_idx in res:
         print(match_idx)
         deobfuscation = (res[match_idx][0]['matched'])
         for rule_idx in rules :
             if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
+                pCreate.append("<p id=pid" + str(match_idx) + ">" + str(res[match_idx][0]['matched']) + "</p>")
+                print("P->", pCreate)
                 ob_path = rules[rule_idx]['deobfuscation']
                 mod_name = os.path.basename(ob_path)
         spec = importlib.util.spec_from_file_location(mod_name, ob_path)
         foo = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(foo)
         cls = foo.deobfus_code(deobfuscation)
+
+        
+
+
+    with open('html_file.html', 'a') as html_file:
+        for p_idx in pCreate :
+            html_file.write(html_text1 + p_idx + html_text2)
+     
     
 if __name__ == '__main__':
     main()
