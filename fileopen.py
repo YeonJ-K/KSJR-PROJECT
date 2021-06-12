@@ -136,16 +136,12 @@ def main():
 
     res = match_rule(source_lines, rules)
 
-    print(res['1'][0])
-    print(rules)
-    pCreate = []
+#    print(rules)
+
     for match_idx in res:
-        print(match_idx)
         deobfuscation = (res[match_idx][0]['matched'])
         for rule_idx in rules :
             if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
-                pCreate.append("<p id=pid" + str(match_idx) + ">" + str(res[match_idx][0]['matched']) + "</p>")
-                print("P->", pCreate)
                 ob_path = rules[rule_idx]['deobfuscation']
                 mod_name = os.path.basename(ob_path)
         spec = importlib.util.spec_from_file_location(mod_name, ob_path)
@@ -153,12 +149,16 @@ def main():
         spec.loader.exec_module(foo)
         cls = foo.deobfus_code(deobfuscation)
 
+        change_p = "<p id=pid" + str(match_idx) + ">" + str(deobfuscation) + "</p>"
+        for source_idx in source_lines:
+            if deobfuscation in source_idx:
+                source_idx.replace(deobfuscation, change_p)
+                print(source_idx)
+                
         
-
-
-    with open('html_file.html', 'a') as html_file:
-        for p_idx in pCreate :
-            html_file.write(html_text1 + p_idx + html_text2)
+    
+#    with open('html_file.html', 'a') as html_file:
+#        html_file.write(html_text1 + source_lines + html_text2)
      
     
 if __name__ == '__main__':
