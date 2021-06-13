@@ -12,47 +12,33 @@ import inspect
 import importlib.util
 
 html_text1 = """
-    <!DOCYTPE html>
-    <html>
+    <!DOCTYPE html>
     <head>
-        <title>TEST Page</title>
-        <link href="pTag.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="temp.css">
+        <script src="temp.js"></script>
     </head>
     <body>
+        <div>
+            <div id="left_section" class="left_box">
     """
 
 html_text2 = """
+            </div>
+            <div class="right_box">
+                <div id="section1" class="label">
+                 res[match_idx][0]['rule_no'],res[match_idx][0]['title'],res[match_idx][0]['descriptions'])
+                </div>
+                <div class="elements">
+                상세한 내용1
+                </div>
+            </div>
+        </div>
     </body>
-    </html>
+    </html>    
+"""
+
     
-    """
 
-'''
-#Rule 읽어오는 파일
-rule_files = glob.glob(r'rules/*.json')
-rules = [] # 
-key_list = []
-title = []
-descriptions = []
-deobfuscation = []
-code_convert = []
-#문자열을 전부 읽어와서 for문 돌리기 (전부 읽어오기와 한줄씩 읽어오기가 동시에 불가)
-for i in r.split("\n"):
-    #index는 나중에 p태그의 id값으로 사용될 예정, 지금은 예시로 출력만
-    #i는 받아온 파싱 내용 중에서 한줄씩 들어감
-    print('%d %s' %(index, i))
-    for a in rule_files:
-        json_data = json.loads(open(a).read()) 
-        key = json_data['regexp']
-        detect = re.compile(key)
-        show = re.search(detect, i)
-        print(show)
-        if show:
-            print("탐지 : " + show.group())
-    index += 1
-#html 파일에 추가하기
-
-'''
 
 
 
@@ -105,7 +91,7 @@ def match_rule(lines:list, rules:list) -> dict:
                     line_temp = line_temp[matched_pos+len(matched):]
                     
             
-                    line_res.append({'rule_no':rule["no"], 'matched':matched, 'pos': (current_pos+matched_pos, current_pos+matched_pos+len(matched))})
+                    line_res.append({'rule_no':rule["no"],'title':rule["title"], 'descriptions':rule["descriptions"], 'matched':matched, 'pos': (current_pos+matched_pos, current_pos+matched_pos+len(matched))})
 
                     current_pos += matched_pos+len(matched)
 
@@ -136,30 +122,42 @@ def main():
 
     res = match_rule(source_lines, rules)
 
+    title_line=[]
 #    print(rules)
+    with open('html_file.html', 'a') as html_file:
+        html_file.write(html_text1)
 
-    for match_idx in res:
-        deobfuscation = (res[match_idx][0]['matched'])
-        for rule_idx in rules :
-            if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
-                ob_path = rules[rule_idx]['deobfuscation']
-                mod_name = os.path.basename(ob_path)
-        spec = importlib.util.spec_from_file_location(mod_name, ob_path)
-        foo = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(foo)
-        cls = foo.deobfus_code(deobfuscation)
+        for match_idx in res:
+            deobfuscation = (res[match_idx][0]['matched'])
+            change_p = "<p id=pid" + match_idx + ">" + str(deobfuscation) + "</p>"
+            for source_idx in source_lines:
+                if deobfuscation in source_idx:
+                    source_idx = source_idx.replace(deobfuscation, change_p)
+                    html_file.write(source_idx)
+            for rule_idx in rules :
+                title_line=res[match_idx][0]
+                if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
+                    title_line = res[match_idx][0]['rule_no'],res[match_idx][0]['title'],res[match_idx][0]['descriptions']
+                    ob_path = rules[rule_idx]['deobfuscation']
+                    mod_name = os.path.basename(ob_path)
+            spec = importlib.util.spec_from_file_location(mod_name, ob_path)
+            foo = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(foo)
+            cls = foo.deobfus_code(deobfuscation)
 
-        change_p = "<p id=pid" + str(match_idx) + ">" + str(deobfuscation) + "</p>"
-        for source_idx in source_lines:
-            if deobfuscation in source_idx:
-                source_idx.replace(deobfuscation, change_p)
-                print(source_idx)
-                
+        html_file.write(html_text2)
+        print(res[match_idx][0]['title'])
+
+
         
-    
-#    with open('html_file.html', 'a') as html_file:
-#        html_file.write(html_text1 + source_lines + html_text2)
-     
+
+"""
+    with open('html_file.html', 'a') as html_file:
+        html_file.write(html_text1)
+        for source_idx in source_lines:
+            html_file.write(source_idx)
+        html_file.write(html_text2)
+"""
     
 if __name__ == '__main__':
     main()
