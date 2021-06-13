@@ -1,6 +1,6 @@
 .label
 {
-    width: 500px;
+    width: 450px;
     margin: 10px 0 0 0;
     padding: 10px;
     background-color: #ccccff;
@@ -11,16 +11,25 @@
 {
     border: 1px solid #ccccff;
     padding: 10px;
-    width: 500px;
+    width: 450px;
 }
 
 .left_box
 {
+    width:50%;
     padding: 10px;
     float: left;
 }
 
 .right_box
 {
+    width:40%;
     float: right;
+} 
+
+p {
+    background-color: #ffe773;
+    color:black;
+    white-space: normal;
+    word-wrap: break-word;
 }
