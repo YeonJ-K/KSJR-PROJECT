@@ -7,7 +7,7 @@ window.onload = () => {
     for (var i = 0; i < elements.length; i++) {
       if (elements[i].className == "elements") {
         elements[i].style.display="none";
-      } else if (elements[i].className == "result") {
+      } else if (elements[i].className == "pre") {
         elements[i].onclick=switchDisplay;
       }
     }
