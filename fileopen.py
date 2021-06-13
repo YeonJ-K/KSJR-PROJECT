@@ -37,11 +37,6 @@ html_text2 = """
     </html>    
 """
 
-    
-
-
-
-
 def  load_rules(rule_path:str) -> dict:
 
     rules = {}
@@ -118,35 +113,44 @@ def main():
     rules = load_rules(rule_path)
     print(f'    [-] {len(rules)} rules loaded')
 
-    source_lines = load_malware(args.input)
-
-    res = match_rule(source_lines, rules)
+    source_lines = load_malware(args.input) # source_line : 파일 읽어옴. list 형식
+    res = match_rule(source_lines, rules) # res : 읽은 파일에서 탐지된 내용에 대해 가져옴
 
     title_line=[]
+    label=[]
+    pre=[]
+    result_deobfuscation=[]
 #    print(rules)
     with open('html_file.html', 'a') as html_file:
         html_file.write(html_text1)
 
-        for match_idx in res:
-            deobfuscation = (res[match_idx][0]['matched'])
-            change_p = "<p id=pid" + match_idx + ">" + str(deobfuscation) + "</p>"
-            for source_idx in source_lines:
-                if deobfuscation in source_idx:
-                    source_idx = source_idx.replace(deobfuscation, change_p)
-                    html_file.write(source_idx)
+        for match_idx in res:       # match_idx : 탐지된 수에 대한 번호 
+            deobfuscation = (res[match_idx][0]['matched']) # res[match_idx][0] : 89번 라인대로 출력 dict 형식
+            change_p = "<div class=\"pre\"><p id=pid" + match_idx + ">" + str(deobfuscation) + "</p></div>" # 탐지된 부분만 p태그, pid값 넣어줌
+            for source_idx in source_lines:     # source_idx : 읽어온 파일을 엔터 단위로 리스트로 받아와서 인덱스 부여
+                if deobfuscation in source_idx: # 각 줄마다 탐지된 내용 탐색. deobfuscation = 코드 중에서 난독화 된 내용
+                    source_idx = source_idx.replace(deobfuscation, change_p) # source_idx p 태그 넣은 형식으로 변경
+                    pre.append(source_idx)
+                    #print(pre)
             for rule_idx in rules :
-                title_line=res[match_idx][0]
                 if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
-                    title_line = res[match_idx][0]['rule_no'],res[match_idx][0]['title'],res[match_idx][0]['descriptions']
+                    title_line = [str(res[match_idx][0]['title']),str(res[match_idx][0]['descriptions'])]
                     ob_path = rules[rule_idx]['deobfuscation']
                     mod_name = os.path.basename(ob_path)
             spec = importlib.util.spec_from_file_location(mod_name, ob_path)
             foo = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(foo)
-            cls = foo.deobfus_code(deobfuscation)
+            list_deo = foo.deobfus_code(deobfuscation)
 
+            result_deobfuscation.append(list_deo)
+            print(type(result_deobfuscation))
+
+        for result_idx in result_deobfuscation :
+            result_idx = result_idx.replace("\x00","")
+        label.append(title_line)
         html_file.write(html_text2)
-        print(res[match_idx][0]['title'])
+#        print(result_deobfuscation)
+
 
 
         
