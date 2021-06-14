@@ -175,14 +175,14 @@ def main():
     """
 
     num = len(label)
-    for i range (num):
+    for match_idx in res:
         funLabel = 
         """        <div>
                     <div id="section1" class="label">
-                        """+str(label[i])+"""
+                        """+str(label[match_idx])+"""
                     </div>
-                    <div class="elements id=\"ele"""+str(i+1)+"\">"
-        funElements = funLabel+str(result_deobfuscation[i])+"""            </div>
+                    <div class="elements id=\"ele"""+str(match_idx)+"\">"
+        funElements = funLabel+str(result_deobfuscation[match_idx])+"""            </div>
                 </div>
         """
         right_box += funElements     
