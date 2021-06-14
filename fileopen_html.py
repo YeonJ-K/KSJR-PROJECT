@@ -125,7 +125,7 @@ def main():
 #    print(rules)
     for match_idx in res:       # match_idx : 탐지된 수에 대한 번호 
         deobfuscation = (res[match_idx][0]['matched']) # res[match_idx][0] : 89번 라인대로 출력 dict 형식
-        change_p = "<div class=\"pre\"><p id=pid" + match_idx + ">" + str(deobfuscation) + "</p></div>" # 탐지된 부분만 p태그, pid값 넣어줌
+        change_p = "<div class=\"pre\" onclick=\"display();\"><p id=pid" + match_idx + ">" + str(deobfuscation) + "</p></div>" # 탐지된 부분만 p태그, pid값 넣어줌
         for source_idx in source_lines:     # source_idx : 읽어온 파일을 엔터 단위로 리스트로 받아와서 인덱스 부여
             if deobfuscation in source_idx: # 각 줄마다 탐지된 내용 탐색. deobfuscation = 코드 중에서 난독화 된 내용
                 source_idx = source_idx.replace(deobfuscation, change_p) # source_idx p 태그 넣은 형식으로 변경
@@ -161,6 +161,7 @@ def main():
 
     #temp.py
     right_box = ""
+    funElements = ""
     html_head ="""<!DOCTYPE html>
     <head>
         <link rel="stylesheet" href="temp.css">
@@ -173,18 +174,18 @@ def main():
             <div id="left_section" class="left_box">
     """
 
-    for i in label:
-        funLabel = """        <div>
-                <div id="section1" class="label">
-                    <p>"""+str(i)+"""</p>
-                </div>
-                <div class="elements">
-        """
-        for j in result_deobfuscation:
-            funElements = funLabel+j+"""            </div>
+    num = len(label)
+    for i range (num):
+        funLabel = 
+        """        <div>
+                    <div id="section1" class="label">
+                        """+str(label[i])+"""
                     </div>
-            """
-        right_box += funElements    
+                    <div class="elements id=\"ele"""+str(i)+"\">"
+        funElements = funLabel+str(result_deobfuscation[i])+"""            </div>
+                </div>
+        """
+        right_box += funElements     
 
 
     html_body_2 ="""        </div>

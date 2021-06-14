@@ -27,6 +27,13 @@
     float: right;
 } 
 
+.pre{
+    background-color: #ffe773;
+    color:black;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
 p {
     background-color: #ffe773;
     color:black;

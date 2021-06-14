@@ -11,7 +11,7 @@
     """
 '''
         
-right_box, funLabel, funElements = ""
+right_box = ""
 
 html_head =
 """<!DOCTYPE html>
@@ -26,20 +26,19 @@ html_body_1 =
     <div>
         <div id="left_section" class="left_box">
 """
-
-for i in label:
-    funLabel = 
-    """        <div>
-                <div id="section1" class="label">
-                    <p>"""+i+"""</p>
-                </div>
-                <div class="elements">
-    """
-    for j in result_deobfuscation:
-        funElements = funLabel+j+"""            </div>
+    num = len(label)
+    for i range (num):
+        funLabel = 
+        """        <div>
+                    <div id="section1" class="label">
+                        """+str(label[i])+"""
+                    </div>
+                    <div class="elements">
+        """
+        funElements = funLabel+str(result_deobfuscation[i])+"""            </div>
                 </div>
         """
-    right_box += funElements    
+        right_box += funElements    
 
 
 html_body_2 =
