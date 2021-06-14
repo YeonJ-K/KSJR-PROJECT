@@ -1,14 +1,12 @@
 "use strict";
 
-function display() {
-    i = 0
-    window.onload = () => {
-        
-    };
-    if (ele.style.display=="none"){
-        ele[i].style.display="block";
+function display(a) {
+    var str = "ele"+a;
+    var name = document.getElementById(str);
+    if (name.style.display=="none"){
+        name.style.display="block";
     } else {
-        ele.style.display="none";
+        name.style.display="none";
     }
 }
 
@@ -24,5 +22,15 @@ window.onload = () => {
     }
 
 };
+/
+function display(a) {
+    str = "ele"+a;
+    elements = document.getElementById(str);
+    if (ele1.style.display=="none"){
+        ele1.style.display="block";
+    } else {
+        ele1.style.display="none";
+    }
+}
 */
 

@@ -1,5 +1,18 @@
 "use strict";
 
+function display(a) {
+    var str = "ele"+a;
+    var name = document.getElementById(str);
+    if (name.style.display=="none"){
+        name.style.display="block";
+    } else {
+        name.style.display="none";
+    }
+}
+
+/*
+"use strict";
+
 window.onload = () => {
     var elements = document.getElementsByTagName("div");
 
@@ -28,3 +41,4 @@ window.onload = () => {
 
 };
 
+*/
