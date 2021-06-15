@@ -118,51 +118,104 @@ def main():
 
     title_line=[]
     label=[]
-    pred=[]
+    pre=[]
     result_deobfuscation=[]
+    result_deobfuscations=[]
     b = []
-    pre = []
 #    print(rules)
-    with open('html_file.html', 'a') as html_file:
-        html_file.write(html_text1)
+    for match_idx in res:       # match_idx : 탐지된 수에 대한 번호 
+        deobfuscation = (res[match_idx][0]['matched']) # res[match_idx][0] : 89번 라인대로 출력 dict 형식
+        change_p = "<div class=\"pre\" onclick=\"display("+match_idx+");\" ><p id=pid" + match_idx + ">" + str(deobfuscation) + "</p></div>" # 탐지된 부분만 p태그, pid값 넣어줌
+        for source_idx in source_lines:     # source_idx : 읽어온 파일을 엔터 단위로 리스트로 받아와서 인덱스 부여
+            if deobfuscation in source_idx: # 각 줄마다 탐지된 내용 탐색. deobfuscation = 코드 중에서 난독화 된 내용
+                source_idx = source_idx.replace(deobfuscation, change_p) # source_idx p 태그 넣은 형식으로 변경
+                pre.append(source_idx)
+                #print(pre)
+        for rule_idx in rules :
+            if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
+                title_line = [str(res[match_idx][0]['title']),str(res[match_idx][0]['descriptions'])]
+                label.append(title_line)
 
-        for match_idx in res:       # match_idx : 탐지된 수에 대한 번호 
-            deobfuscation = (res[match_idx][0]['matched']) # res[match_idx][0] : 89번 라인대로 출력 dict 형식
-            change_p = "<div class=\"pre\"><p id=pid" + match_idx + ">" + str(deobfuscation) + "</p></div>" # 탐지된 부분만 p태그, pid값 넣어줌
-            for source_idx in source_lines:     # source_idx : 읽어온 파일을 엔터 단위로 리스트로 받아와서 인덱스 부여
-                if deobfuscation in source_idx: # 각 줄마다 탐지된 내용 탐색. deobfuscation = 코드 중에서 난독화 된 내용
-                    source_idx = source_idx.replace(deobfuscation, change_p) # source_idx p 태그 넣은 형식으로 변경
-                    pred.append(source_idx)
-                    #print(pred)
-            for rule_idx in rules :
-                if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
-                    title_line = [str(res[match_idx][0]['title']),str(res[match_idx][0]['descriptions'])]
-                    ob_path = rules[rule_idx]['deobfuscation']
-                    mod_name = os.path.basename(ob_path)
+                ob_path = rules[rule_idx]['deobfuscation']
+                mod_name = os.path.basename(ob_path)
             spec = importlib.util.spec_from_file_location(mod_name, ob_path)
             foo = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(foo)
             list_deo = foo.deobfus_code(deobfuscation)
 
-            result_deobfuscation.extend(list_deo)
-            for a in result_deobfuscation:
-                if '\x00' in a:
-                    result_deobfuscation.remove(a)
-            c = "".join(result_deobfuscation)
-            pre.append(c)
+        result_deobfuscation.append(list_deo)
+        print(result_deobfuscation)
+    """
+        result_deobfuscations.extend(list_deo)
+        for a in result_deobfuscations:
+            if '\x00' in a:
+                result_deobfuscations.remove(a)
+        c = "".join(result_deobfuscations)
+        result_deobfuscation.append(c)
 
-            #print(list_deo)
-            #print(result_deobfuscation)
-            print(pre)           #->base64파일에서 받은 결과들의 리스트
+        #print(list_deo)
+        #print(result_deobfuscation)
+        #print(type(d))
+#        print(result_deobfuscation)           #->base64파일에서 받은 결과들의 리스트
 
-        for result_idx in result_deobfuscation :
-            result_idx = result_idx.replace("\x00","")
-        label.append(title_line)
-        html_file.write(html_text2)
-#        print(result_deobfuscation)
+    for result_idx in result_deobfuscation :
+        result_idx = result_idx.replace("\x00","")
+    """
+
+    #temp.py
+    right_box = ""
+    funElements = ""
+    html_head ="""<!DOCTYPE html>
+    <head>
+        <link rel="stylesheet" href="temp.css">
+    </head>
+    """
+
+    html_body_1 ="""<body>
+    <form>
+        <div>
+            <div id="left_section" class="left_box">
+    """
+
+    num = len(label)
+    for i in range(num):
+        funLabel = """
+                <div>
+                    <div class="label">
+                        """+str(label[i])+"""
+                    </div>
+                    <div class="elements" id=\"ele"""+str(i+1)+"\" style=\"display: none\">"
+        funElements = funLabel+str(result_deobfuscation[i])+"""            </div>
+                </div>
+        """
+        right_box += funElements     
+
+
+    html_body_2 ="""        </div>
+        </div>
+    
+        <div class="right_box">
+    """
+
+    html_body_3 ="""    </div>
+    </form>
+        <script src="temp.js"></script>
+    </body>
+    """
 
 
 
+
+    #result와 label은 같은 값이 들어가야하고, elements가 자세한 값
+    #body1뒤에 누르면 열릴 결과값 텍스트
+    #body2뒤엔 div 하나로 넣으면 됨
+
+
+    html_text = str(html_head)+str(html_body_1)+str(pre)+str(html_body_2)+str(right_box)+str(html_body_3) 
+
+
+    with open('test_file.html', 'w') as html_file:
+        html_file.write(html_text)
         
 
 """
