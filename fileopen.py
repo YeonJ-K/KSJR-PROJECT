@@ -10,6 +10,8 @@ import glob
 import argparse
 import inspect
 import importlib.util
+import time
+import webbrowser
 
 html_text1 = """
     <!DOCTYPE html>
@@ -116,6 +118,7 @@ def main():
     source_lines = load_malware(args.input) # source_line : 파일 읽어옴. list 형식
     res = match_rule(source_lines, rules) # res : 읽은 파일에서 탐지된 내용에 대해 가져옴
 
+    print(res)
     title_line=[]
     label=[]
     pre=[]
@@ -132,19 +135,21 @@ def main():
                 pre.append(source_idx)
                 #print(pre)
         for rule_idx in rules :
-            if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
-                title_line = [str(res[match_idx][0]['title']),str(res[match_idx][0]['descriptions'])]
-                label.append(title_line)
-
-                ob_path = rules[rule_idx]['deobfuscation']
-                mod_name = os.path.basename(ob_path)
-            spec = importlib.util.spec_from_file_location(mod_name, ob_path)
-            foo = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(foo)
-            list_deo = foo.deobfus_code(deobfuscation)
-
+            try :
+                if res[match_idx][0]['rule_no'] == rules[rule_idx]['no'] :
+                    title_line = [str(res[match_idx][0]['title']),str(res[match_idx][0]['descriptions'])]
+                    label.append(title_line)
+                
+                    ob_path = rules[rule_idx]['deobfuscation']
+                    mod_name = os.path.basename(ob_path)
+                spec = importlib.util.spec_from_file_location(mod_name, ob_path)
+                foo = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(foo)
+                list_deo = foo.deobfus_code(deobfuscation)
+            except:
+                continue
         result_deobfuscation.append(list_deo)
-        print(result_deobfuscation)
+
     """
         result_deobfuscations.extend(list_deo)
         for a in result_deobfuscations:
@@ -161,7 +166,6 @@ def main():
     for result_idx in result_deobfuscation :
         result_idx = result_idx.replace("\x00","")
     """
-
     #temp.py
     right_box = ""
     funElements = ""
@@ -214,9 +218,12 @@ def main():
     html_text = str(html_head)+str(html_body_1)+str(pre)+str(html_body_2)+str(right_box)+str(html_body_3) 
 
 
-    with open('test_file.html', 'w') as html_file:
+    with open('report.html', 'w') as html_file:
         html_file.write(html_text)
-        
+
+    print("Create report.html")
+    time.sleep(1)
+    webbrowser.open_new_tab('report.html')    
 
 """
     with open('html_file.html', 'a') as html_file:
